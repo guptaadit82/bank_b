@@ -198,7 +198,7 @@ app.get('/api/bank-details', async (req, res) => {
 
 
 
-const port = 8080;
+
 
 /** HTTP GET Request */
 app.get('/', (req, res) => {
@@ -216,17 +216,30 @@ app.use('/api', router)
 
 
 
-
+const port = 8080;
+const serverAddress = 'https://yuko-bank-api.onrender.com';
 /** start server only when we have valid connection */
-connect().then(() => {
-    try {
-        app.listen(port, () => {
-            console.log(`Server connected to http://localhost:${port}`);
-        })
-    } catch (error) {
-        console.log('Cannot connect to the server')
+function startServer(address) {
+  try {
+    app.listen(port, () => {
+      console.log(`Server connected to ${address}`);
+    });
+  } catch (error) {
+    console.log('Cannot connect to the server');
+  }
+}
+connect()
+  .then(() => {
+    // Check if localhost is available
+    const localhostAvailable = true; // Replace with your logic to check if localhost is available
+
+    if (localhostAvailable) {
+      startServer(`http://localhost:${port}`);
+    } else {
+      startServer(serverAddress);
     }
-}).catch(error => {
-    console.log("Invalid database connection...!");
-})
+  })
+  .catch((error) => {
+    console.log('Invalid database connection...!');
+  });
 
